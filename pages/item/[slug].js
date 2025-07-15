@@ -120,6 +120,37 @@ export default function ItemPage({ item }) {
             />
           </div>
         )}
+
+        {/* Shipping and Refund Information */}
+    <div className="bg-white rounded-lg p-6 max-w-2xl mx-auto">
+      <table className="w-full border-collapse">
+        <tbody>
+          <tr>
+            <td className="bg-white font-semibold text-gray-800 p-4 border border-gray-200 w-1/3">
+              Shipping
+            </td>
+            <td className="bg-white text-gray-600 p-4 border border-gray-200 w-2/3">
+            배송기간은 결제 확인 후 2-5일 이내이며, 배송 업체의 사정 등으로 연장 또는 단축될 수 있습니다.
+            기본 배송료는 3,000원이나, 산간벽지나 도서지방은 별도의 추가금액 지불이 필요할 수 있습니다.
+            5만원 이상 구매시 무료로 배송 해드립니다.
+            Free standard shipping on orders over $50. Express delivery available.
+            </td>
+          </tr>
+          <tr>
+            <td className="bg-white font-semibold text-gray-800 p-4 border border-gray-200">
+              Refund
+            </td>
+            <td className="bg-white text-gray-600 p-4 border border-gray-200">
+              교환 및 반품은 제품 구매 후 7일 이내에 가능합니다.
+              단순 변심에 의한 교환/환불의 경우 왕복 배송비 6,000원이 발생합니다.
+              7-day return policy. Full refund for unopened items.
+              Customers will be responsible for shipping costs for returns. 
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
       </main>
     </div>
       <Footer 
