@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { HexColorPicker } from "react-colorful";
 import SpinnablePreview from '@/components/SpinnablePreview';
+import SpinningCard3D from '@/components/SpinningCard3D';
+
 
 // Placeholder Background SVG - Replace with your actual import
 const BackgroundSVG = ({ fill }) => (
@@ -130,19 +132,20 @@ export default function SvgColorTest() {
         
         {/* SVG Preview with Background/Foreground */}
         <div className="bg-gray-50 p-8 rounded-lg" style={{ perspective: 400 }}>
-          <div className="relative">
-            <svg 
-              width="250" 
-              height="250" 
-              viewBox="0 0 159 198"
-            >
-              {/* Background SVG - This will change color */}
-              <BackgroundSVG fill={backgroundColor} />
-              
-              {/* Foreground SVG - This stays static */}
-              <ForegroundSVG />
-            </svg>
-          </div>
+          
+            <div className="relative">
+              <svg 
+                width="250" 
+                height="250" 
+                viewBox="0 0 159 198"
+              >
+                {/* Background SVG - This will change color */}
+                <BackgroundSVG fill={backgroundColor} />
+                
+                {/* Foreground SVG - This stays static */}
+                <ForegroundSVG />
+              </svg>
+            </div>
         
           {/* Color Summary */}
           <div className="mt-4 text-center">
@@ -297,6 +300,10 @@ export default function SvgColorTest() {
           </div>
         </div>
       </div>
+
+
+      {/* Third Section: React Three Fiber */}
+      {/* <SpinningCard3D/> */}
 
 
 

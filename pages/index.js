@@ -75,6 +75,8 @@ const BarberShopHomepage = () => {
       <ScrollHeader/>
 
       <HeroSection 
+        title="Welcome to OPO"
+        subtitle="Discover a world of fun and innovative products designed for your furry friends. From interactive toys to comfy beds, we've got everything to keep your pets happy and healthy."
         pageName="home"
         fallbackImage="/images/border.png"
       />

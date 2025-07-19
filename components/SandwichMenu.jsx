@@ -86,7 +86,7 @@ export default function SandwichMenu() {
       {/* Full Viewport Dark Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 w-screen h-screen bg-black bg-opacity-60 z-[9998]"
+          className="fixed inset-0 w-screen h-screen bg-black/50 z-[9998]"
           style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           onClick={toggleMenu}
         ></div>
@@ -94,7 +94,7 @@ export default function SandwichMenu() {
 
       {/* Sidebar Menu Panel */}
       <div
-        className={`fixed top-0 right-0 h-screen w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[9999] ${
+        className={`fixed top-0 right-0 h-screen w-80 bg-white/80 shadow-xl transform transition-transform duration-300 ease-in-out z-[9999] ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{ position: 'fixed' }}

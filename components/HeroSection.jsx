@@ -81,7 +81,7 @@ const HeroSection = ({
         
         {/* Optional dark overlay for better text readability */}
         {showOverlay && (title || subtitle) && (
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+          <div className="absolute inset-0 bg-transparent bg-opacity-30"></div>
         )}
       </div>
 
@@ -89,12 +89,12 @@ const HeroSection = ({
       {(title || subtitle) && (
         <div className="relative z-10 text-center text-white px-4">
           {title && (
-            <h1 className="text-5xl md:text-7xl font-bold capitalize tracking-wide drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] mb-4">
+            <h1 className="text-5xl md:text-7xl font-bold capitalize tracking-wide  mb-4">
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="text-xl md:text-2xl text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-200  max-w-5xl mx-auto">
               {subtitle}
             </p>
           )}
