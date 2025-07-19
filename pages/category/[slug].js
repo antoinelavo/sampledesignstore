@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ScrollHeader from '@/components/Header'
 import Items from '@/components/Items'
 import HeroSection from '@/components/HeroSection';
@@ -7,6 +7,10 @@ import { supabase } from '@/lib/supabase'
 
 const CategoryPage = ({ items, category, error }) => {
   const [activeSubcategory, setActiveSubcategory] = useState('all');
+  const [heroData, setHeroData] = useState({
+    title: null,
+    subtitle: null
+  });
 
   // Extract unique subcategories from items
   const subcategories = useMemo(() => {
@@ -39,6 +43,59 @@ const CategoryPage = ({ items, category, error }) => {
     }
   }, [category, activeSubcategory]);
 
+  // Fetch hero section data when heroPageName changes
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        console.log(`Fetching hero data for page: ${heroPageName}`);
+        
+        const { data, error } = await supabase
+          .from('hero_sections')
+          .select('title, subtitle')
+          .eq('page_name', heroPageName)
+          .single();
+
+        if (error) {
+          if (error.code === 'PGRST116') {
+            console.log(`No hero data found for ${heroPageName}, using fallbacks`);
+            // Set fallback based on current context
+            const fallbackTitle = activeSubcategory === 'all' 
+              ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')
+              : `${category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')} - ${activeSubcategory}`;
+            
+            setHeroData({
+              title: fallbackTitle,
+              subtitle: null
+            });
+          } else {
+            throw error;
+          }
+        } else {
+          console.log(`Hero data fetched successfully for ${heroPageName}:`, data);
+          setHeroData({
+            title: data.title,
+            subtitle: data.subtitle
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching hero data:', error);
+        // Keep fallback values on error
+        const fallbackTitle = activeSubcategory === 'all' 
+          ? category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')
+          : `${category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')} - ${activeSubcategory}`;
+        
+        setHeroData({
+          title: fallbackTitle,
+          subtitle: null
+        });
+      }
+    };
+
+    if (heroPageName) {
+      fetchHeroData();
+    }
+  }, [heroPageName, category, activeSubcategory]);
+
   // Handle error case
   if (error) {
     return (
@@ -60,7 +117,8 @@ const CategoryPage = ({ items, category, error }) => {
         {/* Hero Section */}
         <HeroSection 
           pageName={category}
-          title={category}
+          title={heroData.title || category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
+          subtitle={heroData.subtitle}
           fallbackImage="/images/background1.jpeg"
           showOverlay={true}
         />
@@ -84,6 +142,8 @@ const CategoryPage = ({ items, category, error }) => {
       {/* Dynamic Hero Section - Changes based on selected subcategory */}
       <HeroSection 
         pageName={heroPageName}
+        title={heroData.title}
+        subtitle={heroData.subtitle}
         fallbackImage="/images/background1.jpeg"
       />
 

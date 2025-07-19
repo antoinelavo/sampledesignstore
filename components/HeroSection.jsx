@@ -58,13 +58,12 @@ const HeroSection = ({
   }, [pageName, fallbackImage]);
 
   return (
-    <section className={`relative min-h-screen flex items-center justify-center ${className}`}>
+    <section className={`relative min-h-[100dvh] flex items-center justify-center ${className}`}>
       {/* Hero Image */}
       <div className="absolute inset-0">
         {loading ? (
           // Loading state - show fallback with loading indicator
           <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-            <div className="text-white text-lg">Loading...</div>
           </div>
         ) : (
           <img

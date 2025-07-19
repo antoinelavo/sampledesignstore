@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus, Save, X, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import HeroSection from '@/components/HeroSection';
 
 const HeroSectionsAdmin = () => {
   const [heroSections, setHeroSections] = useState([]);
@@ -9,6 +10,8 @@ const HeroSectionsAdmin = () => {
   const [editForm, setEditForm] = useState({});
   const [newSection, setNewSection] = useState({
     page_name: '',
+    title: '',
+    subtitle: '',
     image_url: ''
   });
   const [showAddForm, setShowAddForm] = useState(false);
@@ -96,11 +99,16 @@ const HeroSectionsAdmin = () => {
     try {
       const { data, error } = await supabase
         .from('hero_sections')
-        .insert([newSection]);
+        .insert([{
+          page_name: newSection.page_name,
+          title: newSection.title || null,
+          subtitle: newSection.subtitle || null,
+          image_url: newSection.image_url
+        }]);
 
       if (error) throw error;
 
-      setNewSection({ page_name: '', image_url: '' });
+      setNewSection({ page_name: '', title: '', subtitle: '', image_url: '' });
       setShowAddForm(false);
       setSuccess('Hero section added successfully!');
       setError('');
@@ -116,7 +124,12 @@ const HeroSectionsAdmin = () => {
   // Start editing
   const startEdit = (section) => {
     setEditingId(section.id);
-    setEditForm({ ...section });
+    setEditForm({ 
+      page_name: section.page_name,
+      title: section.title || '',
+      subtitle: section.subtitle || '',
+      image_url: section.image_url
+    });
     setError('');
     setSuccess('');
   };
@@ -124,7 +137,7 @@ const HeroSectionsAdmin = () => {
   // Save edited section
   const saveEdit = async () => {
     if (!editForm.page_name || !editForm.image_url) {
-      setError('Please fill in all required fields');
+      setError('Please fill in page name and upload an image');
       return;
     }
 
@@ -133,6 +146,8 @@ const HeroSectionsAdmin = () => {
         .from('hero_sections')
         .update({
           page_name: editForm.page_name,
+          title: editForm.title || null,
+          subtitle: editForm.subtitle || null,
           image_url: editForm.image_url
         })
         .eq('id', editingId);
@@ -247,57 +262,74 @@ const HeroSectionsAdmin = () => {
       {showAddForm && (
         <div className="border rounded-lg p-4 mb-6 bg-gray-50">
           <h3 className="text-lg font-semibold mb-4">새 히어로 섹션 추가</h3>
-                      {/* Quick Add Presets */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">빠른 추가 (일반적인 페이지)</label>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'home'})}
-                  className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
-                >
-                  홈페이지
-                </button>
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'kennel-club'})}
-                  className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
-                >
-                  Kennel Club
-                </button>
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'kennel-club-dog'})}
-                  className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
-                >
-                  Kennel Club - Dog
-                </button>
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'kennel-club-cat'})}
-                  className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
-                >
-                  Kennel Club - Cat
-                </button>
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'clothing'})}
-                  className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
-                >
-                  Clothing
-                </button>
-                <button
-                  onClick={() => setNewSection({...newSection, page_name: 'clothing-shirts'})}
-                  className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
-                >
-                  Clothing - Shirts
-                </button>
-              </div>
+          
+          {/* Quick Add Presets */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">빠른 추가 (일반적인 페이지)</label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'home'})}
+                className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+              >
+                홈페이지
+              </button>
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'kennel-club'})}
+                className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+              >
+                Kennel Club
+              </button>
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'kennel-club-dog'})}
+                className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
+              >
+                Kennel Club - Dog
+              </button>
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'kennel-club-cat'})}
+                className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
+              >
+                Kennel Club - Cat
+              </button>
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'clothing'})}
+                className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+              >
+                Clothing
+              </button>
+              <button
+                onClick={() => setNewSection({...newSection, page_name: 'clothing-shirts'})}
+                className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors"
+              >
+                Clothing - Shirts
+              </button>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <input
-              type="text"
-              placeholder="페이지 이름 (예: home, kennel-club, clothing)"
-              value={newSection.page_name}
-              onChange={(e) => setNewSection({...newSection, page_name: e.target.value})}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="페이지 이름 (예: home, kennel-club, clothing)"
+                value={newSection.page_name}
+                onChange={(e) => setNewSection({...newSection, page_name: e.target.value})}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <input
+                type="text"
+                placeholder="제목 (선택사항)"
+                value={newSection.title}
+                onChange={(e) => setNewSection({...newSection, title: e.target.value})}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <textarea
+                placeholder="부제목 (선택사항)"
+                value={newSection.subtitle}
+                onChange={(e) => setNewSection({...newSection, subtitle: e.target.value})}
+                rows="3"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+              />
+            </div>
             <ImageUploadSection
               title="히어로 이미지"
               currentImage={newSection.image_url}
@@ -315,7 +347,7 @@ const HeroSectionsAdmin = () => {
             <button
               onClick={() => {
                 setShowAddForm(false);
-                setNewSection({ page_name: '', image_url: '' });
+                setNewSection({ page_name: '', title: '', subtitle: '', image_url: '' });
               }}
               className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
             >
@@ -329,16 +361,32 @@ const HeroSectionsAdmin = () => {
       {editingId ? (
         // Edit Form Modal
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-xl font-semibold mb-4">히어로 섹션 수정</h3>
-            <div className="grid grid-cols-1 gap-4 mb-6">
-              <input
-                type="text"
-                placeholder="페이지 이름"
-                value={editForm.page_name || ''}
-                onChange={(e) => setEditForm({...editForm, page_name: e.target.value})}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="페이지 이름"
+                  value={editForm.page_name || ''}
+                  onChange={(e) => setEditForm({...editForm, page_name: e.target.value})}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <input
+                  type="text"
+                  placeholder="제목 (선택사항)"
+                  value={editForm.title || ''}
+                  onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <textarea
+                  placeholder="부제목 (선택사항)"
+                  value={editForm.subtitle || ''}
+                  onChange={(e) => setEditForm({...editForm, subtitle: e.target.value})}
+                  rows="3"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                />
+              </div>
               <ImageUploadSection
                 title="히어로 이미지"
                 currentImage={editForm.image_url}
@@ -371,7 +419,7 @@ const HeroSectionsAdmin = () => {
           {heroSections.map((section) => (
             <div key={section.id} className="border rounded-lg p-4 relative group">
               {/* Admin Controls */}
-              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <button
                   onClick={() => startEdit(section)}
                   className="bg-blue-600 text-white p-1 rounded hover:bg-blue-700 transition-colors"
@@ -386,12 +434,15 @@ const HeroSectionsAdmin = () => {
                 </button>
               </div>
 
-              {/* Hero Image */}
-              <div className="aspect-video rounded overflow-hidden mb-3">
-                <img
-                  src={section.image_url}
-                  alt={`${section.page_name} hero`}
-                  className="w-full h-full object-cover"
+              {/* Hero Section Preview */}
+              <div className="aspect-video rounded overflow-hidden mb-3 relative">
+                <HeroSection
+                  pageName={section.page_name}
+                  title={section.title}
+                  subtitle={section.subtitle}
+                  fallbackImage={section.image_url}
+                  showOverlay={true}
+                  className="!min-h-full !h-full [&_h1]:!text-lg [&_h1]:!md:text-xl [&_p]:!text-sm [&_p]:!md:text-sm"
                 />
               </div>
 
@@ -400,7 +451,17 @@ const HeroSectionsAdmin = () => {
                 <h4 className="font-semibold text-gray-900 capitalize mb-1">
                   {section.page_name.replace('-', ' ')}
                 </h4>
-                <p className="text-sm text-gray-500 truncate">
+                {section.title && (
+                  <p className="text-sm text-gray-700 font-medium truncate mb-1">
+                    제목: {section.title}
+                  </p>
+                )}
+                {section.subtitle && (
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                    부제목: {section.subtitle}
+                  </p>
+                )}
+                <p className="text-xs text-gray-400 truncate">
                   {section.image_url}
                 </p>
               </div>

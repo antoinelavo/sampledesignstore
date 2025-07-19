@@ -6,10 +6,14 @@ import HeroSection from '@/components/HeroSection'
 import Footer from '@/components/Footer'
 import { supabase } from '@/lib/supabase'
 
-const BarberShopHomepage = () => {
+const Homepage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [heroData, setHeroData] = useState({
+    title: "Loading...", // Fallback title
+    subtitle: "" // Fallback subtitle
+  });
 
   // Extract unique categories from items
   const categories = useMemo(() => {
@@ -23,6 +27,40 @@ const BarberShopHomepage = () => {
     
     return uniqueCategories.sort();
   }, [items]);
+
+  // Fetch hero section data for home page
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        console.log('Fetching hero data for home page...');
+        
+        const { data, error } = await supabase
+          .from('hero_sections')
+          .select('title, subtitle')
+          .eq('page_name', 'home')
+          .single();
+
+        if (error) {
+          if (error.code === 'PGRST116') {
+            console.log('No hero data found for home page, using fallbacks');
+          } else {
+            throw error;
+          }
+        } else {
+          console.log('Hero data fetched successfully:', data);
+          setHeroData({
+            title: data.title || "",
+            subtitle: data.subtitle || ""
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching hero data:', error);
+        // Keep fallback values on error
+      }
+    };
+
+    fetchHeroData();
+  }, []);
 
   // Fetch all items from Supabase
   useEffect(() => {
@@ -75,10 +113,10 @@ const BarberShopHomepage = () => {
       <ScrollHeader/>
 
       <HeroSection 
-        title="Welcome to OPO"
-        subtitle="Discover a world of fun and innovative products designed for your furry friends. From interactive toys to comfy beds, we've got everything to keep your pets happy and healthy."
         pageName="home"
         fallbackImage="/images/border.png"
+        title={heroData.title}
+        subtitle={heroData.subtitle}
       />
 
       {/* Category Navigation Section */}
@@ -165,4 +203,4 @@ const BarberShopHomepage = () => {
   );
 };
 
-export default BarberShopHomepage;
+export default Homepage;
