@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import SandwichMenu from './SandwichMenu';
+import CartIcon from './CartIcon';
 
 export default function ScrollHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,6 +78,9 @@ export default function ScrollHeader() {
                 )}
               </a>
             </div>
+            
+            {/* Cart Icon - positioned on the right */}  
+            {/* <CartIcon/> */}
 
             {/* Sandwich Menu - positioned on the right */}
             <div className="ml-auto">

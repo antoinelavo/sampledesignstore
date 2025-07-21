@@ -4,8 +4,7 @@ import Link from 'next/link';
 import ScrollHeader from '@/components/Header'
 import Footer from '@/components/Footer'
 import { supabase } from '@/lib/supabase'
-import PaymentButton from '@/components/PaymentButton';
-
+import AddToCart from '@/components/AddToCart';
 
 export default function ItemPage({ item }) {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -75,6 +74,11 @@ export default function ItemPage({ item }) {
             </div>
           )}
 
+          {/* Add to Cart Section */}
+          {/* <div className="flex justify-center mb-12">
+            <AddToCart item={item} />
+          </div> */}
+
           {/* Additional details - Commented out for now */}
           {/*
           <div className="w-fit mx-auto p-[2em]">
@@ -97,17 +101,6 @@ export default function ItemPage({ item }) {
           </div>
           */}
 
-          {/* Price section */}
-          <div className="flex justify-center mt-[3em]">
-            <div className="mx-auto text-center">
-              <h3 className="text-lg font-semibold mb-2">Price</h3>
-              <p className="text-gray-600">₩{item.price || 'Out of Stock'}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center mt-8">
-          <PaymentButton item={item} />
         </div>
 
         {/* Description Image */}
